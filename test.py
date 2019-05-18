@@ -1,3 +1,5 @@
+# https://docs.python-guide.org/scenarios/scrape/
+
 from lxml import html
 import requests
 
