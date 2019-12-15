@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+import json
 import os
 import re
 
@@ -22,24 +23,12 @@ js = bs.find('script', text=re.compile('resultListModel: '))
 parser = Parser()
 tree = parser.parse(js.contents[0])
 # print tree
-# fields = {getattr(node.left, 'value', ''): getattr(node.right, 'value', '')
-#           for node in nodevisitor.visit(tree)
-#           if isinstance(node, ast.Assign)}
 fields = next(node.right for node in nodevisitor.visit(tree)
               if (isinstance(node, ast.Assign) and node.left.to_ecma() == 'resultListModel'))
-# keylist = fields.keys()
-# keylist.sort()
-# for key in keylist:
-#     print key
 
-print(fields.to_ecma())
+elements = json.loads(fields.to_ecma())['searchResponseModel']['resultlist.resultlist']['resultlistEntries']
 
-#look for queryModel
-
-# print(type(fields['"resultlist.resultlist"']))
-
-# print("fields keys: {}".format(fields.keys()))
-# for child in fields["searchResponseModel"]:
-#     if not isinstance(child, ast.VarStatement):
-#         raise ValueError("All statements should be var statements")
-#     print("child: {}".format(child))
+for elem in elements:
+    offers = elem['resultlistEntry']
+    for offer in offers:
+        print("{}\n".format(offer['resultlist.realEstate']['address']))
