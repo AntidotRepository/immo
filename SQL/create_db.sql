@@ -9,16 +9,16 @@ CREATE TABLE offers
 	livingSpace			REAL		NOT NULL,
 	numberOfRooms		INTEGER		NOT NULL,
 	energyPerfCert		BOOLEAN		NOT NULL,
-	energyEfficiency	CHAR(1)		NOT NULL,
-	builtInKitchen		BOOLEAN		NOT NULL,
-	balcony				BOOLEAN		NOT NULL,
-	garden				BOOLEAN		NOT NULL,
-	lift				BOOLEAN		NOT NULL,
-	guestToilet			BOOLEAN		NOT NULL,
-	cellar				BOOLEAN		NOT NULL,
-	isBarrierFree		BOOLEAN		NOT NULL,
-	stillAvailable		BOOLEAN		NOT NULL,	# Does it still on the website
-	lastTimeView		DATE		NOT NULL	# Last time it has been seen on the website
+	energyEfficiency	CHAR(1),
+	builtInKitchen		BOOLEAN,
+	balcony				BOOLEAN,
+	garden				BOOLEAN,
+	lift				BOOLEAN,
+	guestToilet			BOOLEAN,
+	cellar				BOOLEAN,
+	isBarrierFree		BOOLEAN,
+	stillAvailable		BOOLEAN		NOT NULL,	-- Does it still on the website
+	lastTimeView		DATE		NOT NULL	-- Last time it has been seen on the website
 );
 
 CREATE TABLE addresses

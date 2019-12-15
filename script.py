@@ -3,7 +3,9 @@ import json
 import os
 import re
 import ssl
+import time
 import urllib.request
+from db import DB
 
 from slimit import ast
 from slimit.parser import Parser
@@ -29,6 +31,7 @@ class Immo24_Parser():
         """
         self.number_of_pages = 0
         self.my_json = None
+        self.my_db = DB()
 
         if fake is True:
             # Used for tests only!
@@ -68,7 +71,68 @@ class Immo24_Parser():
         for elem in elements:
             offers = elem['resultlistEntry']
             for offer in offers:
-                print("{}\n".format(offer['resultlist.realEstate']['address']))
+                offer = offer['resultlist.realEstate']
+                print(offer['address'].keys())
+                if '@id' not in offer.keys():
+                    assert False, "Missing id!"
+                ISSUE WITH CREATION DATE! Not found in file!
+                if '@creation' not in offer.keys():
+                    offer['@creation'] = time.strftime('%Y-%m-%d %H:%M:%S')
+                if '@modification' not in offer.keys():
+                    offer['@modification'] = offer['@creation']
+                if 'title' not in offer.keys():
+                    assert False, "Missing title!"
+                if 'privateOffer' not in offer.keys():
+                    offer['privateOffer'] = False
+                if 'price' not in offer.keys():
+                    assert False, "Missing price!"
+                if 'value' not in offer['price'].keys():
+                    assert False, "Missing value!"
+                if 'livingSpace' not in offer.keys():
+                    assert False, "Missing living space!"
+                if 'numberOfRooms' not in offer.keys():
+                    assert False, "Missing number of rooms!"
+                if 'energyPerfCert' not in offer.keys():
+                    offer['energyPerfCert'] = False
+                if 'energyEfficiency' not in offer.keys():
+                    offer['energyEfficiency'] = 'NULL'
+                if 'builtInKitchen' not in offer.keys():
+                    offer['builtInKitchen'] = 'NULL'
+                if 'balcony' not in offer.keys():
+                    offer['balcony'] = 'NULL'
+                if 'garden' not in offer.keys():
+                    offer['garden'] = 'NULL'
+                if 'lift' not in offer.keys():
+                    offer['lift'] = 'NULL'
+                if 'guestToilet' not in offer.keys():
+                    offer['guestToilet'] = 'NULL'
+                if 'cellar' not in offer.keys():
+                    offer['cellar'] = 'NULL'
+                if 'isBarrierFree' not in offer.keys():
+                    offer['isBarrierFree'] = 'NULL'
+                if 'address' not in offer.keys():
+                    assert False, "Missing address"
+                if 'street' not in offer['address'].keys():
+                    offer['address']['street'] = 'None'
+                if 'houseNumber' not in offer['address'].keys():
+                    offer['address']['houseNumber'] = 'None'
+                if 'latitude' not in offer['address'].keys():
+                    offer['address']['latitude'] = 'None'
+                if 'longitude' not in offer['address'].keys():
+                    offer['address']['longitude'] = 'None'
+                if 'preciseHouseNumber' not in offer['address'].keys():
+                    if offer['address']['street'] is not 'None':
+                        offer['address']['preciseHouseNumber'] = True
+                    else:
+                        offer['address']['preciseHouseNumber'] = False
+                if 'postcode' not in offer['address'].keys():
+                    assert False, "No postcode!"
+                if 'city' not in offer['address'].keys():
+                    assert False, "No city!"
+                if 'quarter' not in offer['address'].keys():
+                    assert False, "No quarter!"
+
+                self.my_db.insert_offer(offer)
 
     # -------------------------------------------------------------------------
 
