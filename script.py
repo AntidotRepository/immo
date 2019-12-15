@@ -10,6 +10,20 @@ from slimit.parser import Parser
 from slimit.visitors import nodevisitor
 
 
+def get_offers(my_json):
+    elements = my_json['searchResponseModel']['resultlist.resultlist']['resultlistEntries']
+    for elem in elements:
+        offers = elem['resultlistEntry']
+        for offer in offers:
+            print("{}\n".format(offer['resultlist.realEstate']['address']))
+
+
+def get_number_of_pages(my_json):
+    numberOfPages = my_json['searchResponseModel']['resultlist.resultlist']['paging']['numberOfPages']
+    print(numberOfPages)
+    return numberOfPages
+
+
 def parse_page(page):
     # Store the HTML file as a string
     html = page.read()
@@ -28,13 +42,9 @@ def parse_page(page):
                   if (isinstance(node, ast.Assign) and
                       node.left.to_ecma() == 'resultListModel'))
 
-    elements = json.loads(
-        fields.to_ecma())['searchResponseModel']['resultlist.resultlist']['resultlistEntries']
-
-    for elem in elements:
-        offers = elem['resultlistEntry']
-        for offer in offers:
-            print("{}\n".format(offer['resultlist.realEstate']['address']))
+    my_json = json.loads(fields.to_ecma())
+    get_offers(my_json)
+    get_number_of_pages(my_json)
 
 
 if (not os.environ.get('PYTHONHTTPSVERIFY', '') and
