@@ -28,6 +28,7 @@ class Immo24_Parser():
         self.number_of_pages = self.get_number_of_pages()
 
         for i in range(self.number_of_pages):
+            print("page {}/{}".format(i, self.number_of_pages))
             page = urllib.request.urlopen('https://www.immobilienscout24.de/Suche/de/berlin/berlin/wohnung-kaufen?pagenumber={}'.format(i))
             self.my_json = self.get_json(page)
             self.get_offers()
