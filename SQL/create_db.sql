@@ -23,6 +23,7 @@ CREATE TABLE offers
 
 CREATE TABLE addresses
 (
+	appartment_id		INTEGER		PRIMARY KEY,
 	street				CHAR(150),
 	houseNumber			CHAR(10),
 	latitude			REAL,
@@ -30,5 +31,5 @@ CREATE TABLE addresses
 	preciseHouseNumber	BOOLEAN		NOT NULL,
 	postCode			INTEGER		NOT NULL,
 	city				CHAR(50)	NOT NULL,
-	quater				CHAR(50)	NOT NULL
+	quarter				CHAR(50)	NOT NULL
 );
