@@ -16,7 +16,9 @@ CREATE TABLE offers
 	lift				BOOLEAN		NOT NULL,
 	guestToilet			BOOLEAN		NOT NULL,
 	cellar				BOOLEAN		NOT NULL,
-	isBarrierFree		BOOLEAN		NOT NULL
+	isBarrierFree		BOOLEAN		NOT NULL,
+	stillAvailable		BOOLEAN		NOT NULL,	# Does it still on the website
+	lastTimeView		DATE		NOT NULL	# Last time it has been seen on the website
 );
 
 CREATE TABLE addresses
