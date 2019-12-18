@@ -10,6 +10,7 @@ class DB():
 
     def insert_offer(self, offer):
         try:
+            realEstate = offer['resultlist.realEstate']
             self.cursor.execute('''INSERT INTO offers (id,
                                                        modification,
                                                        creation,
@@ -49,23 +50,23 @@ class DB():
                                            :stillAvailable,
                                            :lastTimeView);''',
                                 {
-                                    'id': offer['resultlist.realEstate']['@id'],
+                                    'id': realEstate['@id'],
                                     'modification': offer['@modification'],
                                     'creation': offer['@creation'],
-                                    'title': offer['resultlist.realEstate']['title'],
-                                    'privateOffer': offer['resultlist.realEstate']['privateOffer'],
-                                    'price': float(offer['resultlist.realEstate']['price']['value']),
-                                    'livingSpace': offer['resultlist.realEstate']['livingSpace'],
-                                    'numberOfRooms': offer['resultlist.realEstate']['numberOfRooms'],
-                                    'energyPerfCert': offer['resultlist.realEstate']['energyPerfCert'],
-                                    'energyEfficiency': offer['resultlist.realEstate']['energyEfficiency'],
-                                    'builtInKitchen': offer['resultlist.realEstate']['builtInKitchen'],
-                                    'balcony': offer['resultlist.realEstate']['balcony'],
-                                    'garden': offer['resultlist.realEstate']['garden'],
-                                    'lift': offer['resultlist.realEstate']['lift'],
-                                    'guestToilet': offer['resultlist.realEstate']['guestToilet'],
-                                    'cellar': offer['resultlist.realEstate']['cellar'],
-                                    'isBarrierFree': offer['resultlist.realEstate']['isBarrierFree'],
+                                    'title': realEstate['title'],
+                                    'privateOffer': realEstate['privateOffer'],
+                                    'price': float(realEstate['price']['value']),
+                                    'livingSpace': realEstate['livingSpace'],
+                                    'numberOfRooms': realEstate['numberOfRooms'],
+                                    'energyPerfCert': realEstate['energyPerfCert'],
+                                    'energyEfficiency': realEstate['energyEfficiency'],
+                                    'builtInKitchen': realEstate['builtInKitchen'],
+                                    'balcony': realEstate['balcony'],
+                                    'garden': realEstate['garden'],
+                                    'lift': realEstate['lift'],
+                                    'guestToilet': realEstate['guestToilet'],
+                                    'cellar': realEstate['cellar'],
+                                    'isBarrierFree': realEstate['isBarrierFree'],
                                     'stillAvailable': True,
                                     'lastTimeView': time.strftime
                                     ('%Y-%m-%d %H:%M:%S')
@@ -93,15 +94,15 @@ class DB():
                                            :city,
                                            :quarter);''',
                                 {
-                                    'appartment_id': offer['resultlist.realEstate']['@id'],
-                                    'street': offer['resultlist.realEstate']['address']['street'],
-                                    'houseNumber': offer['resultlist.realEstate']['address']['houseNumber'],
-                                    'latitude': offer['resultlist.realEstate']['address']['latitude'],
-                                    'longitude': offer['resultlist.realEstate']['address']['longitude'],
-                                    'preciseHouseNumber': offer['resultlist.realEstate']['address']['preciseHouseNumber'],
-                                    'postCode': offer['resultlist.realEstate']['address']['postcode'],
-                                    'city': offer['resultlist.realEstate']['address']['city'],
-                                    'quarter': offer['resultlist.realEstate']['address']['quarter']
+                                    'appartment_id': realEstate['@id'],
+                                    'street': realEstate['address']['street'],
+                                    'houseNumber': realEstate['address']['houseNumber'],
+                                    'latitude': realEstate['address']['latitude'],
+                                    'longitude': realEstate['address']['longitude'],
+                                    'preciseHouseNumber': realEstate['address']['preciseHouseNumber'],
+                                    'postCode': realEstate['address']['postcode'],
+                                    'city': realEstate['address']['city'],
+                                    'quarter': realEstate['address']['quarter']
                                 })
             self.db.commit()
         except Exception:

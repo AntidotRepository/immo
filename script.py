@@ -71,64 +71,63 @@ class Immo24_Parser():
         for elem in elements:
             offers = elem['resultlistEntry']
             for offer in offers:
-                print("Creation date: {}".format(offer['@creation']))
-                #offer = offer
-                if '@id' not in offer['resultlist.realEstate'].keys():
+                realEstate = offer['resultlist.realEstate']
+                if '@id' not in realEstate.keys():
                     assert False, "Missing id!"
                 if '@creation' not in offer.keys():
                     assert False, "No creation date!"
                 if '@modification' not in offer.keys():
                     assert False, "No modification date!"
-                if 'title' not in offer['resultlist.realEstate'].keys():
+                if 'title' not in realEstate.keys():
                     assert False, "Missing title!"
-                if 'privateOffer' not in offer['resultlist.realEstate'].keys():
-                    offer['resultlist.realEstate']['privateOffer'] = False
-                if 'price' not in offer['resultlist.realEstate'].keys():
+                if 'privateOffer' not in realEstate.keys():
+                    realEstate['privateOffer'] = False
+                if 'price' not in realEstate.keys():
                     assert False, "Missing price!"
-                if 'value' not in offer['resultlist.realEstate']['price'].keys():
+                if 'value' not in realEstate['price'].keys():
                     assert False, "Missing value!"
-                if 'livingSpace' not in offer['resultlist.realEstate'].keys():
+                if 'livingSpace' not in realEstate.keys():
                     assert False, "Missing living space!"
-                if 'numberOfRooms' not in offer['resultlist.realEstate'].keys():
+                if 'numberOfRooms' not in realEstate.keys():
                     assert False, "Missing number of rooms!"
-                if 'energyPerfCert' not in offer['resultlist.realEstate'].keys():
-                    offer['resultlist.realEstate']['energyPerfCert'] = False
-                if 'energyEfficiency' not in offer['resultlist.realEstate'].keys():
-                    offer['resultlist.realEstate']['energyEfficiency'] = 'NULL'
-                if 'builtInKitchen' not in offer['resultlist.realEstate'].keys():
+                if 'energyPerfCert' not in realEstate.keys():
+                    realEstate['energyPerfCert'] = False
+                if 'energyEfficiency' not in realEstate.keys():
+                    realEstate['energyEfficiency'] = 'NULL'
+                if 'builtInKitchen' not in realEstate.keys():
                     offer['builtInKitchen'] = 'NULL'
-                if 'balcony' not in offer['resultlist.realEstate'].keys():
-                    offer['resultlist.realEstate']['balcony'] = 'NULL'
-                if 'garden' not in offer['resultlist.realEstate'].keys():
-                    offer['resultlist.realEstate']['garden'] = 'NULL'
-                if 'lift' not in offer['resultlist.realEstate'].keys():
-                    offer['resultlist.realEstate']['lift'] = 'NULL'
-                if 'guestToilet' not in offer['resultlist.realEstate'].keys():
-                    offer['resultlist.realEstate']['guestToilet'] = 'NULL'
-                if 'cellar' not in offer['resultlist.realEstate'].keys():
-                    offer['resultlist.realEstate']['cellar'] = 'NULL'
-                if 'isBarrierFree' not in offer['resultlist.realEstate'].keys():
-                    offer['resultlist.realEstate']['isBarrierFree'] = 'NULL'
-                if 'address' not in offer['resultlist.realEstate'].keys():
+                if 'balcony' not in realEstate.keys():
+                    realEstate['balcony'] = 'NULL'
+                if 'garden' not in realEstate.keys():
+                    realEstate['garden'] = 'NULL'
+                if 'lift' not in realEstate.keys():
+                    realEstate['lift'] = 'NULL'
+                if 'guestToilet' not in realEstate.keys():
+                    realEstate['guestToilet'] = 'NULL'
+                if 'cellar' not in realEstate.keys():
+                    realEstate['cellar'] = 'NULL'
+                if 'isBarrierFree' not in realEstate.keys():
+                    realEstate['isBarrierFree'] = 'NULL'
+                if 'address' not in realEstate.keys():
                     assert False, "Missing address"
-                if 'street' not in offer['resultlist.realEstate']['address'].keys():
-                    offer['resultlist.realEstate']['address']['street'] = 'None'
-                if 'houseNumber' not in offer['resultlist.realEstate']['address'].keys():
-                    offer['resultlist.realEstate']['address']['houseNumber'] = 'None'
-                if 'latitude' not in offer['resultlist.realEstate']['address'].keys():
-                    offer['resultlist.realEstate']['address']['latitude'] = 'None'
-                if 'longitude' not in offer['resultlist.realEstate']['address'].keys():
-                    offer['resultlist.realEstate']['address']['longitude'] = 'None'
-                if 'preciseHouseNumber' not in offer['resultlist.realEstate']['address'].keys():
-                    if offer['resultlist.realEstate']['address']['street'] != 'None':
-                        offer['resultlist.realEstate']['address']['preciseHouseNumber'] = True
+                if 'street' not in realEstate['address'].keys():
+                    realEstate['address']['street'] = 'None'
+                if 'houseNumber' not in realEstate['address'].keys():
+                    realEstate['address']['houseNumber'] = 'None'
+                if 'latitude' not in realEstate['address'].keys():
+                    realEstate['address']['latitude'] = 'None'
+                if 'longitude' not in realEstate['address'].keys():
+                    realEstate['address']['longitude'] = 'None'
+                if 'preciseHouseNumber' not in realEstate['address'].keys():
+                    if realEstate['address']['street'] != 'None':
+                        realEstate['address']['preciseHouseNumber'] = True
                     else:
-                        offer['resultlist.realEstate']['address']['preciseHouseNumber'] = False
-                if 'postcode' not in offer['resultlist.realEstate']['address'].keys():
+                        realEstate['address']['preciseHouseNumber'] = False
+                if 'postcode' not in realEstate['address'].keys():
                     assert False, "No postcode!"
-                if 'city' not in offer['resultlist.realEstate']['address'].keys():
+                if 'city' not in realEstate['address'].keys():
                     assert False, "No city!"
-                if 'quarter' not in offer['resultlist.realEstate']['address'].keys():
+                if 'quarter' not in realEstate['address'].keys():
                     assert False, "No quarter!"
 
                 self.my_db.insert_offer(offer)
