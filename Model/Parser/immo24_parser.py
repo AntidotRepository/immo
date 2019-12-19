@@ -8,63 +8,27 @@ from slimit.visitors import nodevisitor
 
 
 class Immo24_Parser():
-    def __init__(self, fake=False):
+    def __init__(self):
         """
         Initialize Immo24_Parser.
-
-        Fetch every web pages matching:
-        https://www.immobilienscout24.de/Suche/de/berlin/berlin/
-        wohnung-kaufen?pagenumber=1
-        and get the offers from these pages.
-
-        Param:
-        @type fake: Boolean (default: False)
-        @param fake: False: Use immoScout24 to fill the database
-                            (normal usecase)
-                     True: Use toParse.html to fill the database
-                           (for tests purpose)
         """
         self.number_of_pages = 0
         self.my_json = None
-        # self.my_db = DB()
-
-        # if fake is True:
-        #     # Used for tests only!
-        #     os.chdir("/Users/ducept/Documents/Programmation/immobilier/")
-        #     # Store the HTML file as a string
-        #     page = open('toParse.html', 'r')
-        #     self.my_json = self.get_json(page)
-        #     self.get_offers()
-        # else:
-        #     # Normal use!
-        #     if (not os.environ.get('PYTHONHTTPSVERIFY', '') and
-        #             getattr(ssl, '_create_unverified_context', None)):
-        #         ssl._create_default_https_context = \
-        #             ssl._create_unverified_context
-
-        #     page = urllib.request.urlopen('https://www.immobilienscout24.de/\
-        #         Suche/de/berlin/berlin/wohnung-kaufen?pagenumber=1')
-        #     print("Parsing 1st page")
-        #     self.my_json = self.get_json(page)
-        #     print("Get number of pages")
-        #     self.number_of_pages = self.get_number_of_pages()
-
-        #     for i in range(self.number_of_pages):
-        #         print("page {}/{}".format(i, self.number_of_pages))
-        #         page = urllib.request.urlopen('https://www.immobilienscout24.\
-        #             de/Suche/de/berlin/berlin/wohnung-kaufen?pagenumber={}'.
-        #                                       format(i))
-        #         self.my_json = self.get_json(page)
-        #         self.get_offers()
-
     # -------------------------------------------------------------------------
 
     # -------------------------------------------------------------------------
     def get_offers(self, page):
+        # First, get the json content of the page.
         self.my_json = self.get_json(page)
         offers_list = list()
+
+        # From that json, extract the offers
         elements = self.my_json['searchResponseModel']\
             ['resultlist.resultlist']['resultlistEntries']
+
+        # Check that every offer has all information.
+        # If not, complete it with default values or assert
+        # if the value are really important.
         for elem in elements:
             offers = elem['resultlistEntry']
             for offer in offers:
@@ -167,5 +131,3 @@ class Immo24_Parser():
     # -------------------------------------------------------------------------
 
     # -------------------------------------------------------------------------
-
-Immo24_Parser(fake=True)

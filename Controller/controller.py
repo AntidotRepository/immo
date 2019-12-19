@@ -22,18 +22,20 @@ class Controller:
 
         else:
             # Normal use!
+            # Manage SSL certificate issue (not pretty clean)
             if (not os.environ.get('PYTHONHTTPSVERIFY', '') and
                     getattr(ssl, '_create_unverified_context', None)):
                 ssl._create_default_https_context = \
                     ssl._create_unverified_context
 
+            # First, check how many page we have to retrieve.
             page = urllib.request.urlopen('https://www.immobilienscout24.de/' +
                                           'Suche/de/berlin/berlin/wohnung-' +
                                           'kaufen?pagenumber=1')
-            print("Parsing 1st page")
             print("Get number of pages")
             self.number_of_pages = self.my_parser.get_number_of_pages(page)
 
+            # For each page, get the offers
             for i in range(self.number_of_pages):
                 print("page {}/{}".format(i, self.number_of_pages))
                 page = urllib.request.urlopen('https://www.immobilienscout24' +
@@ -42,6 +44,7 @@ class Controller:
                                               format(i))
                 offers = self.my_parser.get_offers(page)
 
+                # Store each offer in the DB
                 for offer in offers:
                     self.my_db.insert_offer(offer)
 

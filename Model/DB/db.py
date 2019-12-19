@@ -73,10 +73,11 @@ class DB():
                                     'lastTimeView': time.strftime
                                     ('%Y-%m-%d %H:%M:%S')
                                 })
-        except:
+        except Exception:
             print(sys.exc_info()[0])
 
         try:
+            address = realEstate['address']
             self.cursor.execute('''INSERT INTO addresses(appartment_id,
                                                          street,
                                                          houseNumber,
@@ -97,14 +98,14 @@ class DB():
                                            :quarter);''',
                                 {
                                     'appartment_id': realEstate['@id'],
-                                    'street': realEstate['address']['street'],
-                                    'houseNumber': realEstate['address']['houseNumber'],
-                                    'latitude': realEstate['address']['latitude'],
-                                    'longitude': realEstate['address']['longitude'],
-                                    'preciseHouseNumber': realEstate['address']['preciseHouseNumber'],
-                                    'postCode': realEstate['address']['postcode'],
-                                    'city': realEstate['address']['city'],
-                                    'quarter': realEstate['address']['quarter']
+                                    'street': address['street'],
+                                    'houseNumber': address['houseNumber'],
+                                    'latitude': address['latitude'],
+                                    'longitude': address['longitude'],
+                                    'preciseHouseNumber': address['preciseHouseNumber'],
+                                    'postCode': address['postcode'],
+                                    'city': address['city'],
+                                    'quarter': address['quarter']
                                 })
             self.db.commit()
         except Exception:
