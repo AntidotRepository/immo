@@ -1,11 +1,6 @@
 from bs4 import BeautifulSoup
 import json
-import os
 import re
-import ssl
-import time
-import urllib.request
-from db import DB
 
 from slimit import ast
 from slimit.parser import Parser
@@ -31,41 +26,43 @@ class Immo24_Parser():
         """
         self.number_of_pages = 0
         self.my_json = None
-        self.my_db = DB()
+        # self.my_db = DB()
 
-        if fake is True:
-            # Used for tests only!
-            os.chdir("/Users/ducept/Documents/Programmation/immobilier/")
-            # Store the HTML file as a string
-            page = open('toParse.html', 'r')
-            self.my_json = self.get_json(page)
-            self.get_offers()
-        else:
-            # Normal use!
-            if (not os.environ.get('PYTHONHTTPSVERIFY', '') and
-                    getattr(ssl, '_create_unverified_context', None)):
-                ssl._create_default_https_context = \
-                    ssl._create_unverified_context
+        # if fake is True:
+        #     # Used for tests only!
+        #     os.chdir("/Users/ducept/Documents/Programmation/immobilier/")
+        #     # Store the HTML file as a string
+        #     page = open('toParse.html', 'r')
+        #     self.my_json = self.get_json(page)
+        #     self.get_offers()
+        # else:
+        #     # Normal use!
+        #     if (not os.environ.get('PYTHONHTTPSVERIFY', '') and
+        #             getattr(ssl, '_create_unverified_context', None)):
+        #         ssl._create_default_https_context = \
+        #             ssl._create_unverified_context
 
-            page = urllib.request.urlopen('https://www.immobilienscout24.de/\
-                Suche/de/berlin/berlin/wohnung-kaufen?pagenumber=1')
-            print("Parsing 1st page")
-            self.my_json = self.get_json(page)
-            print("Get number of pages")
-            self.number_of_pages = self.get_number_of_pages()
+        #     page = urllib.request.urlopen('https://www.immobilienscout24.de/\
+        #         Suche/de/berlin/berlin/wohnung-kaufen?pagenumber=1')
+        #     print("Parsing 1st page")
+        #     self.my_json = self.get_json(page)
+        #     print("Get number of pages")
+        #     self.number_of_pages = self.get_number_of_pages()
 
-            for i in range(self.number_of_pages):
-                print("page {}/{}".format(i, self.number_of_pages))
-                page = urllib.request.urlopen('https://www.immobilienscout24.\
-                    de/Suche/de/berlin/berlin/wohnung-kaufen?pagenumber={}'.
-                                              format(i))
-                self.my_json = self.get_json(page)
-                self.get_offers()
-
-    # -------------------------------------------------------------------------
+        #     for i in range(self.number_of_pages):
+        #         print("page {}/{}".format(i, self.number_of_pages))
+        #         page = urllib.request.urlopen('https://www.immobilienscout24.\
+        #             de/Suche/de/berlin/berlin/wohnung-kaufen?pagenumber={}'.
+        #                                       format(i))
+        #         self.my_json = self.get_json(page)
+        #         self.get_offers()
 
     # -------------------------------------------------------------------------
-    def get_offers(self):
+
+    # -------------------------------------------------------------------------
+    def get_offers(self, page):
+        self.my_json = self.get_json(page)
+        offers_list = list()
         elements = self.my_json['searchResponseModel']\
             ['resultlist.resultlist']['resultlistEntries']
         for elem in elements:
@@ -130,12 +127,15 @@ class Immo24_Parser():
                 if 'quarter' not in realEstate['address'].keys():
                     assert False, "No quarter!"
 
-                self.my_db.insert_offer(offer)
+                offers_list.append(offer)
+
+        return offers_list
 
     # -------------------------------------------------------------------------
 
     # -------------------------------------------------------------------------
-    def get_number_of_pages(self):
+    def get_number_of_pages(self, page):
+        self.my_json = self.get_json(page)
         numberOfPages = self.my_json['searchResponseModel']\
             ['resultlist.resultlist']['paging']['numberOfPages']
         print(numberOfPages)

@@ -6,7 +6,7 @@ import sys
 class DB():
     def __init__(self, **kwargs):
         # Create connection to database
-        self.db = sqlite3.connect('SQL/immo.db')
+        self.db = sqlite3.connect('Model/DB/immo.db')
         self.cursor = self.db.cursor()
 
     def insert_offer(self, offer):
