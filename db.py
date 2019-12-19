@@ -1,5 +1,6 @@
 import time
 import sqlite3
+import sys
 
 
 class DB():
@@ -11,6 +12,7 @@ class DB():
     def insert_offer(self, offer):
         try:
             realEstate = offer['resultlist.realEstate']
+            print("Insert {}".format(realEstate['title']))
             self.cursor.execute('''INSERT INTO offers (id,
                                                        modification,
                                                        creation,
@@ -71,8 +73,8 @@ class DB():
                                     'lastTimeView': time.strftime
                                     ('%Y-%m-%d %H:%M:%S')
                                 })
-        except Exception:
-            print(Exception)
+        except:
+            print(sys.exc_info()[0])
 
         try:
             self.cursor.execute('''INSERT INTO addresses(appartment_id,
