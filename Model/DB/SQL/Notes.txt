@@ -1,0 +1,6 @@
+Notes:
+- Create database:
+> sqlite3 immo.db
+
+- Create tables:
+sqlite> .read create_db.sql
