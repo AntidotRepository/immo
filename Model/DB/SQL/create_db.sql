@@ -6,6 +6,7 @@ CREATE TABLE offers
 	title				CHAR(150)	NOT NULL,
 	privateOffer		BOOLEAN		NOT NULL,
 	price				REAL		NOT NULL,
+	sq_meter_price		REAL		NOT NULL,
 	livingSpace			REAL		NOT NULL,
 	numberOfRooms		INTEGER		NOT NULL,
 	energyPerfCert		BOOLEAN		NOT NULL,
