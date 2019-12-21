@@ -1,4 +1,5 @@
 from Model.DB.db import *
+from Model.offer import *
 from Model.Parser.immo24_parser import Immo24_Parser
 
 import os
@@ -11,14 +12,20 @@ class Controller:
     def __init__(self, fake=False):
         self.my_parser = Immo24_Parser()
         self.my_db = DB()
+        self.offers = list()
         if fake is True:
             # For test purpose only
             # Store the HTML file as a string
             page = open('toParse.html', 'r')
-            offers = self.my_parser.get_offers(page)
+            dict_offers = self.my_parser.get_offers(page)
 
-            for offer in offers:
+            for dict_offer in dict_offers:
+                dict_offer['stillAvailable'] = True
+                dict_offer['lastTimeView'] = time.strftime('%Y-%m-%d %H:%M:%S')
+                offer = Offer(dict_offer)
+                self.offers.append(offer)
                 self.my_db.insert_offer(offer)
+            dict_offers.clear()
 
         else:
             # Normal use!
@@ -42,9 +49,14 @@ class Controller:
                                               '.de/Suche/de/berlin/berlin/' +
                                               'wohnung-kaufen?pagenumber={}'.
                                               format(i))
-                offers = self.my_parser.get_offers(page)
+                dict_offers = self.my_parser.get_offers(page)
 
                 # Store each offer in the DB
-                for offer in offers:
+                for dict_offer in dict_offers:
+                    dict_offer['stillAvailable'] = True
+                    dict_offer['lastTimeView'] = time.strftime('%Y-%m-%d %H:%M:%S')
+                    offer = Offer(dict_offer)
+                    self.offers.append(offer)
                     self.my_db.insert_offer(offer)
+                dict_offers.clear()
 

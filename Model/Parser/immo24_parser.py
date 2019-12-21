@@ -91,9 +91,6 @@ class Immo24_Parser():
                 if 'quarter' not in realEstate['address'].keys():
                     assert False, "No quarter!"
 
-                # Calculate price per square meter.
-                realEstate['sq_meter_price'] = realEstate['price']['value'] / realEstate['livingSpace']
-
                 offers_list.append(offer)
 
         return offers_list
