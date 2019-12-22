@@ -68,5 +68,4 @@ class Controller:
 
         for dict_offer in list_dict_offers:
             offer = Offer(dict_offer)
-            print(offer.price)
 
