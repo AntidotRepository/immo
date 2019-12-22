@@ -18,18 +18,56 @@ class Controller:
         self.my_db = DB()
         self.offers = list()
 
+<<<<<<< HEAD
         # Manage SSL certificate issue (not pretty clean)
         if (not os.environ.get('PYTHONHTTPSVERIFY', '') and
                 getattr(ssl, '_create_unverified_context', None)):
             ssl._create_default_https_context = \
                 ssl._create_unverified_context
-
         if skip_parse is False:
-            # Fill DB
             if fake is True:
                 # For test purpose only
                 # Store the HTML file as a string
                 page = open('toParse.html', 'r')
+=======
+        # Fill DB
+        if fake is True:
+            # For test purpose only
+            # Store the HTML file as a string
+            page = open('toParse.html', 'r')
+            dict_offers = self.my_parser.get_offers(page)
+
+            for dict_offer in dict_offers:
+                dict_offer['stillAvailable'] = True
+                dict_offer['lastTimeView'] = time.strftime('%Y-%m-%d %H:%M:%S')
+                offer = Offer(dict_offer)
+                self.offers.append(offer)
+                self.my_db.insert_offer(offer)
+            dict_offers.clear()
+
+        else:
+            # Normal use!
+            # Manage SSL certificate issue (not pretty clean)
+            if (not os.environ.get('PYTHONHTTPSVERIFY', '') and
+                    getattr(ssl, '_create_unverified_context', None)):
+                ssl._create_default_https_context = \
+                    ssl._create_unverified_context
+
+            # First, check how many page we have to retrieve.
+            page = urllib.request.urlopen('https://www.immobilienscout24.de/' +
+                                          'Suche/de/berlin/berlin/wohnung-' +
+                                          'kaufen?pagenumber=1')
+            print("Get number of pages")
+            self.number_of_pages = self.my_parser.get_number_of_pages(page)
+
+            # For each page, get the offers
+            for i in range(self.number_of_pages):
+                print("page {}/{}".format(i, self.number_of_pages))
+                page = urllib.request.urlopen('https://www.immobilienscout24' +
+                                              '.de/Suche/de/berlin/berlin/' +
+                                              'wohnung-kaufen?pagenumber={}'.
+                                              format(i))
+>>>>>>> develop
                 dict_offers = self.my_parser.get_offers(page)
 
                 for dict_offer in dict_offers:
@@ -40,6 +78,7 @@ class Controller:
                     self.my_db.insert_offer(offer)
                 dict_offers.clear()
 
+<<<<<<< HEAD
             else:
                 # Normal use!
                 # First, check how many page we have to retrieve.
@@ -66,15 +105,8 @@ class Controller:
                         self.offers.append(offer)
                         self.my_db.insert_offer(offer)
                     dict_offers.clear()
-        
-        # Get offers from DB
-        list_dict_offers = self.my_db.get_all_offers()
 
-        for dict_offer in list_dict_offers:
-            offer = Offer(dict_offer)
-            print(offer.price)
-
-        # Map stuffs
+	# Map stuffs
         gelocator = Nominatim(user_agent="lol")
         location = gelocator.geocode(12059)
         gmap4 = gmplot.GoogleMapPlotter(location.latitude, location.longitude, 13)
@@ -82,3 +114,12 @@ class Controller:
         gmap4.heatmap([location.latitude], [location.longitude])
 
         gmap4.draw(os.getcwd() + "/maps.html")
+=======
+        # Get offers from DB
+        list_dict_offers = self.my_db.get_all_offers()
+
+        for dict_offer in list_dict_offers:
+            offer = Offer(dict_offer)
+            print(offer.price)
+
+>>>>>>> develop
