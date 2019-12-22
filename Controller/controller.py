@@ -4,6 +4,7 @@ from Model.Parser.immo24_parser import Immo24_Parser
 
 import os
 import ssl
+import time
 import urllib.request
 
 
@@ -13,6 +14,8 @@ class Controller:
         self.my_parser = Immo24_Parser()
         self.my_db = DB()
         self.offers = list()
+
+        # Fill DB
         if fake is True:
             # For test purpose only
             # Store the HTML file as a string
@@ -59,4 +62,11 @@ class Controller:
                     self.offers.append(offer)
                     self.my_db.insert_offer(offer)
                 dict_offers.clear()
+
+        # Get offers from DB
+        list_dict_offers = self.my_db.get_all_offers()
+
+        for dict_offer in list_dict_offers:
+            offer = Offer(dict_offer)
+            print(offer.price)
 
