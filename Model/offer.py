@@ -53,7 +53,7 @@ class Offer():
             ssl._create_default_https_context = \
                 ssl._create_unverified_context
         gelocator = Nominatim(user_agent="my_locator")
-        print(self.street)
+
         if self.street != 'None':
             address = address + " " + self.street
         if self.houseNumber != 'None':
@@ -64,7 +64,5 @@ class Offer():
             address = address + " " + self.city
 
         location = gelocator.geocode(address)
-        print(address)
-        print(location.latitude)
         self.latitude = location.latitude
         self.longitude = location.longitude
