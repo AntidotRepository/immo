@@ -36,7 +36,6 @@ class Controller:
                     dict_offer['stillAvailable'] = True
                     dict_offer['lastTimeView'] = time.strftime('%Y-%m-%d %H:%M:%S')
                     offer = Offer(dict_offer)
-                    self.offers.append(offer)
                     self.my_db.insert_offer(offer)
                 dict_offers.clear()
 
@@ -63,22 +62,30 @@ class Controller:
                         dict_offer['stillAvailable'] = True
                         dict_offer['lastTimeView'] = time.strftime('%Y-%m-%d %H:%M:%S')
                         offer = Offer(dict_offer)
-                        self.offers.append(offer)
                         self.my_db.insert_offer(offer)
                     dict_offers.clear()
-        
+
         # Get offers from DB
         list_dict_offers = self.my_db.get_all_offers()
 
         for dict_offer in list_dict_offers:
             offer = Offer(dict_offer)
+            self.offers.append(offer)
             print(offer.price)
 
         # Map stuffs
+        latitudes = list()
+        longitudes = list()
+
+        for an_offer in self.offers:
+            print(type(an_offer.longitude))
+            if an_offer.latitude != 'None':
+                latitudes.append(an_offer.latitude)
+                longitudes.append(an_offer.longitude)
         gelocator = Nominatim(user_agent="lol")
         location = gelocator.geocode(12059)
         gmap4 = gmplot.GoogleMapPlotter(location.latitude, location.longitude, 13)
 
-        gmap4.heatmap([location.latitude], [location.longitude])
+        gmap4.heatmap(latitudes, longitudes)
 
         gmap4.draw(os.getcwd() + "/maps.html")
