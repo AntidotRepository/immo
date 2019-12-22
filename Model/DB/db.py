@@ -9,7 +9,7 @@ class DB():
 
     def insert_offer(self, offer):
         # try:
-        print("Insert {}".format(offer.title))
+        # print("Insert {}".format(offer.title))
         self.cursor.execute('''INSERT INTO offers (id,
                                                 modification,
                                                 creation,
