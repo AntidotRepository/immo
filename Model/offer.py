@@ -46,13 +46,25 @@ class Offer():
         return self.price / self.livingSpace
 
     def calculate_coordinates(self):
-        print("here")
         # Manage SSL certificate issue (not pretty clean)
+        address = ""
         if (not os.environ.get('PYTHONHTTPSVERIFY', '') and
                 getattr(ssl, '_create_unverified_context', None)):
             ssl._create_default_https_context = \
                 ssl._create_unverified_context
         gelocator = Nominatim(user_agent="my_locator")
-        location = gelocator.geocode(self.postcode)
+        print(self.street)
+        if self.street != 'None':
+            address = address + " " + self.street
+        if self.houseNumber != 'None':
+            address = address + " " + self.houseNumber
+        if self.postcode != 'None':
+            address = address + " " + self.postcode
+        if self.city != 'None':
+            address = address + " " + self.city
+
+        location = gelocator.geocode(address)
+        print(address)
+        print(location.latitude)
         self.latitude = location.latitude
         self.longitude = location.longitude
