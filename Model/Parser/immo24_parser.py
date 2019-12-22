@@ -31,13 +31,13 @@ class Immo24_Parser():
         # if the value are really important.
         for elem in elements:
             offers = elem['resultlistEntry']
-            for offer in offers:
-                realEstate = offer['resultlist.realEstate']
+            for offer_json in offers:
+                realEstate = offer_json['resultlist.realEstate']
                 if '@id' not in realEstate.keys():
                     assert False, "Missing id!"
-                if '@creation' not in offer.keys():
+                if '@creation' not in offer_json.keys():
                     assert False, "No creation date!"
-                if '@modification' not in offer.keys():
+                if '@modification' not in offer_json.keys():
                     assert False, "No modification date!"
                 if 'title' not in realEstate.keys():
                     assert False, "Missing title!"
@@ -56,7 +56,7 @@ class Immo24_Parser():
                 if 'energyEfficiency' not in realEstate.keys():
                     realEstate['energyEfficiency'] = 'NULL'
                 if 'builtInKitchen' not in realEstate.keys():
-                    offer['builtInKitchen'] = 'NULL'
+                    offer_json['builtInKitchen'] = 'NULL'
                 if 'balcony' not in realEstate.keys():
                     realEstate['balcony'] = 'NULL'
                 if 'garden' not in realEstate.keys():
@@ -75,10 +75,12 @@ class Immo24_Parser():
                     realEstate['address']['street'] = 'None'
                 if 'houseNumber' not in realEstate['address'].keys():
                     realEstate['address']['houseNumber'] = 'None'
-                if 'latitude' not in realEstate['address'].keys():
-                    realEstate['address']['latitude'] = 'None'
-                if 'longitude' not in realEstate['address'].keys():
-                    realEstate['address']['longitude'] = 'None'
+                if 'wgs84Coordinate' not in realEstate['address']:
+                    realEstate['address']['wgs84Coordinate'] = dict()
+                if 'latitude' not in realEstate['address']['wgs84Coordinate'].keys():
+                    realEstate['address']['wgs84Coordinate']['latitude'] = 'None'
+                if 'longitude' not in realEstate['address']['wgs84Coordinate'].keys():
+                    realEstate['address']['wgs84Coordinate']['longitude'] = 'None'
                 if 'preciseHouseNumber' not in realEstate['address'].keys():
                     if realEstate['address']['street'] != 'None':
                         realEstate['address']['preciseHouseNumber'] = True
@@ -91,6 +93,32 @@ class Immo24_Parser():
                 if 'quarter' not in realEstate['address'].keys():
                     assert False, "No quarter!"
 
+                offer = dict()
+                offer['id'] = realEstate['@id']
+                offer['creation'] = offer_json['@creation']
+                offer['modification'] = offer_json['@modification']
+                offer['title'] = realEstate['title']
+                offer['privateOffer'] = realEstate['privateOffer']
+                offer['price'] = realEstate['price']['value']
+                offer['livingSpace'] = realEstate['livingSpace']
+                offer['numberOfRooms'] = realEstate['numberOfRooms']
+                offer['energyPerfCert'] = realEstate['energyPerfCert']
+                offer['energyEfficiency'] = realEstate['energyEfficiency']
+                offer['builtInKitchen'] = realEstate['builtInKitchen']
+                offer['balcony'] = realEstate['balcony']
+                offer['garden'] = realEstate['garden']
+                offer['lift'] = realEstate['lift']
+                offer['guestToilet'] = realEstate['guestToilet']
+                offer['cellar'] = realEstate['cellar']
+                offer['isBarrierFree'] = realEstate['isBarrierFree']
+                offer['street'] = realEstate['address']['street']
+                offer['houseNumber'] = realEstate['address']['houseNumber']
+                offer['latitude'] = realEstate['address']['wgs84Coordinate']['latitude']
+                offer['longitude'] = realEstate['address']['wgs84Coordinate']['longitude']
+                offer['preciseHouseNumber'] = realEstate['address']['preciseHouseNumber']
+                offer['postcode'] = realEstate['address']['postcode']
+                offer['city'] = realEstate['address']['city']
+                offer['quarter'] = realEstate['address']['quarter']
                 offers_list.append(offer)
 
         return offers_list
