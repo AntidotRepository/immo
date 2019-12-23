@@ -102,13 +102,8 @@ class Controller:
                             area.add_offer(an_offer)
 
         # Calculation of the average price in the grid
-        i = 0
-        j = 0
         for line in areas_grid:
-            i += 1
-            j = 0
             for area in line:
-                j += 1
                 if len(area.offers) != 0:
                     area.calc_average()
 
