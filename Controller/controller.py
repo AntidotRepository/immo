@@ -74,7 +74,7 @@ class Controller:
             offer = Offer(dict_offer)
             self.offers.append(offer)
 
-        grid_step = 0.1  # Step for latitudes and longitudes
+        grid_step = 0.02  # Step for latitudes and longitudes
         min_latitude = self.my_db.get_min_latitude()
         max_latitude = self.my_db.get_max_latitude()
         min_longitude = self.my_db.get_min_longitude()
@@ -115,7 +115,11 @@ class Controller:
         gmap = gmplot.GoogleMapPlotter(location.latitude, location.longitude, 11)
 
         # Draw the grid
-
+        for line in areas_grid:
+            for area in line:
+                latitude_list = [area.posX, area.posX + area.width, area.posX + area.width, area.posX]
+                longitude_list = [area.posY, area.posY, area.posY + area.height, area.posY + area.height]
+                gmap.polygon(latitude_list, longitude_list, color = 'cornflowerblue')
 
         # Change the color of the dot according to the price.
         for an_offer in self.offers:
