@@ -74,7 +74,8 @@ class Controller:
             offer = Offer(dict_offer)
             self.offers.append(offer)
 
-        grid_step = 0.02  # Step for latitudes and longitudes
+        grid_step_width = 0.07  # Step for latitudes
+        grid_step_height = 0.05  # Step for longitudes
         min_latitude = self.my_db.get_min_latitude()
         max_latitude = self.my_db.get_max_latitude()
         min_longitude = self.my_db.get_min_longitude()
@@ -82,11 +83,11 @@ class Controller:
 
         # Creation of the grid
         areas_grid = list()
-        for latitude in numpy.arange(min_latitude, max_latitude, grid_step):
+        for latitude in numpy.arange(min_latitude, max_latitude, grid_step_height):
             lines = list()
             areas_grid.append(lines)
-            for longitude in numpy.arange(min_longitude, max_longitude, grid_step):
-                area = Area(latitude, longitude, grid_step, grid_step)
+            for longitude in numpy.arange(min_longitude, max_longitude, grid_step_width):
+                area = Area(latitude, longitude, grid_step_height, grid_step_width)
                 lines.append(area)
 
         # Populate the grid
@@ -119,7 +120,7 @@ class Controller:
             for area in line:
                 latitude_list = [area.posX, area.posX + area.width, area.posX + area.width, area.posX]
                 longitude_list = [area.posY, area.posY, area.posY + area.height, area.posY + area.height]
-                gmap.polygon(latitude_list, longitude_list, color = 'cornflowerblue')
+                gmap.polygon(latitude_list, longitude_list, color='cornflowerblue')
 
         # Change the color of the dot according to the price.
         for an_offer in self.offers:
