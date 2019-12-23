@@ -18,5 +18,4 @@ class Area:
         self.average_price = total_price / len(self.offers)
 
         for offer in self.offers:
-            print("Here")
             offer.area_average_price = self.average_price

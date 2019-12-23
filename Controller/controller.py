@@ -74,7 +74,7 @@ class Controller:
             offer = Offer(dict_offer)
             self.offers.append(offer)
 
-        grid_step = 0.05  # Step for latitudes and longitudes
+        grid_step = 0.1  # Step for latitudes and longitudes
         min_latitude = self.my_db.get_min_latitude()
         max_latitude = self.my_db.get_max_latitude()
         min_longitude = self.my_db.get_min_longitude()
@@ -108,14 +108,7 @@ class Controller:
                 if len(area.offers) != 0:
                     area.calc_average()
 
-        # Map stuffs
-        latitudes = list()
-        longitudes = list()
-
-        for an_offer in self.offers:
-            if an_offer.latitude != 'None':
-                latitudes.append(an_offer.latitude)
-                longitudes.append(an_offer.longitude)
+        # # Map stuffs
         gelocator = Nominatim(user_agent="lol")
         location = gelocator.geocode(12059)
 
