@@ -1,3 +1,8 @@
+from geopy.geocoders import Nominatim
+import os
+import ssl
+
+
 class Offer():
     def __init__(self, offer):
         self.id = offer['id']
@@ -23,12 +28,15 @@ class Offer():
 
         self.street = offer['street']
         self.houseNumber = offer['houseNumber']
-        self.latitude = offer['latitude']
-        self.longitude = offer['longitude']
         self.preciseHouseNumber = offer['preciseHouseNumber']
         self.postcode = offer['postcode']
         self.city = offer['city']
         self.quarter = offer['quarter']
+        if offer['latitude'] != 'None' and offer['longitude'] != 'None':
+            self.latitude = offer['latitude']
+            self.longitude = offer['longitude']
+        else:
+            self.calculate_coordinates()
 
     def calculate_sq_meter_price(self):
         # Calculate price per square meter.
@@ -36,3 +44,25 @@ class Offer():
         assert self.livingSpace != 0
 
         return self.price / self.livingSpace
+
+    def calculate_coordinates(self):
+        # Manage SSL certificate issue (not pretty clean)
+        address = ""
+        if (not os.environ.get('PYTHONHTTPSVERIFY', '') and
+                getattr(ssl, '_create_unverified_context', None)):
+            ssl._create_default_https_context = \
+                ssl._create_unverified_context
+        gelocator = Nominatim(user_agent="my_locator")
+
+        if self.street != 'None':
+            address = address + " " + self.street
+        if self.houseNumber != 'None':
+            address = address + " " + self.houseNumber
+        if self.postcode != 'None':
+            address = address + " " + self.postcode
+        if self.city != 'None':
+            address = address + " " + self.city
+
+        location = gelocator.geocode(address)
+        self.latitude = location.latitude
+        self.longitude = location.longitude

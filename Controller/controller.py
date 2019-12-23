@@ -49,7 +49,7 @@ class Controller:
                 self.number_of_pages = self.my_parser.get_number_of_pages(page)
 
                 # For each page, get the offers
-                for i in range(self.number_of_pages):
+                for i in range(1, self.number_of_pages):
                     print("page {}/{}".format(i, self.number_of_pages))
                     page = urllib.request.urlopen('https://www.immobilienscout24' +
                                                   '.de/Suche/de/berlin/berlin/' +
@@ -71,7 +71,6 @@ class Controller:
         for dict_offer in list_dict_offers:
             offer = Offer(dict_offer)
             self.offers.append(offer)
-            print(offer.price)
 
         # Map stuffs
         latitudes = list()
