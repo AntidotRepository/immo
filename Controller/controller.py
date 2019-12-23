@@ -110,9 +110,12 @@ class Controller:
 
         # # Map stuffs
         gelocator = Nominatim(user_agent="lol")
-        location = gelocator.geocode(12059)
+        location = gelocator.geocode(10115)
 
-        gmap4 = gmplot.GoogleMapPlotter(location.latitude, location.longitude, 13)
+        gmap = gmplot.GoogleMapPlotter(location.latitude, location.longitude, 11)
+
+        # Draw the grid
+
 
         # Change the color of the dot according to the price.
         for an_offer in self.offers:
@@ -120,6 +123,6 @@ class Controller:
                 color = 'blue'
             else:
                 color = 'red'
-            gmap4.scatter([an_offer.latitude], [an_offer.longitude], color, size=40, marker=False)
+            gmap.scatter([an_offer.latitude], [an_offer.longitude], color, size=40, marker=False)
 
-        gmap4.draw(os.getcwd() + "/maps.html")
+        gmap.draw(os.getcwd() + "/maps.html")
