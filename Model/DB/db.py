@@ -173,3 +173,23 @@ class DB():
             list_offers.append(dict_offer)
 
         return list_offers
+
+    def get_min_latitude(self):
+        self.cursor.execute('''SELECT MIN(latitude) FROM addresses;''')
+        line = self.cursor.fetchone()
+        return line[0]
+
+    def get_max_latitude(self):
+        self.cursor.execute('''SELECT MAX(latitude) FROM addresses;''')
+        line = self.cursor.fetchone()
+        return line[0]
+
+    def get_min_longitude(self):
+        self.cursor.execute('''SELECT MIN(longitude) FROM addresses;''')
+        line = self.cursor.fetchone()
+        return line[0]
+
+    def get_max_longitude(self):
+        self.cursor.execute('''SELECT MAX(longitude) FROM addresses;''')
+        line = self.cursor.fetchone()
+        return line[0]

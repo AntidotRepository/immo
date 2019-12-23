@@ -38,6 +38,8 @@ class Offer():
         else:
             self.calculate_coordinates()
 
+        self.area_average_price = 0
+
     def calculate_sq_meter_price(self):
         # Calculate price per square meter.
         assert self.price != 0
