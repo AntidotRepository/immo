@@ -95,7 +95,10 @@ class Controller:
             if an_offer.latitude != 'None':
                 for line in areas_grid:
                     for area in line:
-                        if (an_offer.latitude > area.posX) and (an_offer.latitude < (area.posX + area.width)) and (an_offer.longitude > area.posY) and (an_offer.longitude < (area.posY + area.height)):
+                        if (an_offer.latitude > area.posX) and\
+                           (an_offer.latitude < (area.posX + area.width)) and\
+                           (an_offer.longitude > area.posY) and\
+                           (an_offer.longitude < (area.posY + area.height)):
                             area.add_offer(an_offer)
 
         # Calculation of the average price in the grid
@@ -124,8 +127,6 @@ class Controller:
                     most_expensive = area.average_price
                 if area.average_price != 0 and area.average_price < cheapest:
                     cheapest = area.average_price
-        print(most_expensive)
-        print(cheapest)
         # Draw the grid
         for line in areas_grid:
             for area in line:
@@ -134,7 +135,6 @@ class Controller:
                     longitude_list = [area.posY, area.posY, area.posY + area.height, area.posY + area.height]
                     red = ((area.average_price - cheapest)/ (most_expensive - cheapest)) * 255
                     green = 255 - ((area.average_price - cheapest)/ (most_expensive - cheapest)) * 255
-                    print('price: {:.2f}, red: {:.2f}, green: {:.2f}, #{:02x} {:02x} 00'.format(area.average_price, red, green, int(red), int(green)))
                     gmap.polygon(latitude_list, longitude_list, color='#{:02x}{:02x}00'.format(int(red), int(green)))
 
         # Change the color of the dot according to the price.
