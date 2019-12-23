@@ -134,7 +134,8 @@ class DB():
                                       addresses.quarter
                                FROM offers
                                INNER JOIN addresses
-                               ON offers.id = addresses.appartment_id;
+                               ON offers.id = addresses.appartment_id
+                               where addresses.street != 'None';
             ''')
         lines = self.cursor.fetchall()
 

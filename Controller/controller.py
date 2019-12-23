@@ -79,8 +79,9 @@ class Controller:
         for an_offer in self.offers:
             print(type(an_offer.longitude))
             if an_offer.latitude != 'None':
-                latitudes.append(an_offer.latitude)
-                longitudes.append(an_offer.longitude)
+                for i in range(0, int(an_offer.price / 1000)):
+                    latitudes.append(an_offer.latitude)
+                    longitudes.append(an_offer.longitude)
         gelocator = Nominatim(user_agent="lol")
         location = gelocator.geocode(12059)
         gmap4 = gmplot.GoogleMapPlotter(location.latitude, location.longitude, 13)
