@@ -134,7 +134,8 @@ class DB():
                                       addresses.quarter
                                FROM offers
                                INNER JOIN addresses
-                               ON offers.id = addresses.appartment_id;
+                               ON offers.id = addresses.appartment_id
+                               where addresses.street != 'None';
             ''')
         lines = self.cursor.fetchall()
 
@@ -172,3 +173,23 @@ class DB():
             list_offers.append(dict_offer)
 
         return list_offers
+
+    def get_min_latitude(self):
+        self.cursor.execute('''SELECT MIN(latitude) FROM addresses;''')
+        line = self.cursor.fetchone()
+        return line[0]
+
+    def get_max_latitude(self):
+        self.cursor.execute('''SELECT MAX(latitude) FROM addresses;''')
+        line = self.cursor.fetchone()
+        return line[0]
+
+    def get_min_longitude(self):
+        self.cursor.execute('''SELECT MIN(longitude) FROM addresses;''')
+        line = self.cursor.fetchone()
+        return line[0]
+
+    def get_max_longitude(self):
+        self.cursor.execute('''SELECT MAX(longitude) FROM addresses;''')
+        line = self.cursor.fetchone()
+        return line[0]
