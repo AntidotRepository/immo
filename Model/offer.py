@@ -1,6 +1,7 @@
 from geopy.geocoders import Nominatim
 import os
 import ssl
+import sys
 
 
 class Offer():
@@ -36,14 +37,16 @@ class Offer():
             self.latitude = offer['latitude']
             self.longitude = offer['longitude']
         else:
-            self.calculate_coordinates()
+            if self.calculate_coordinates() is False:
+                self.latitude = 'None'
+                self.longitude = 'None'
 
         self.area_average_price = 0
 
     def calculate_sq_meter_price(self):
         # Calculate price per square meter.
-        assert self.price != 0
-        assert self.livingSpace != 0
+        assert self.price != 0, "Appartment id: {}".format(self.id)
+        assert self.livingSpace != 0, "Appartment id: {}".format(self.id)
 
         return self.price / self.livingSpace
 
@@ -59,12 +62,17 @@ class Offer():
         if self.street != 'None':
             address = address + " " + self.street
         if self.houseNumber != 'None':
-            address = address + " " + self.houseNumber
+            address = address + " " + str(self.houseNumber)
         if self.postcode != 'None':
-            address = address + " " + self.postcode
+            address = address + " " + str(self.postcode)
         if self.city != 'None':
             address = address + " " + self.city
-
-        location = gelocator.geocode(address)
-        self.latitude = location.latitude
-        self.longitude = location.longitude
+        try:
+            location = gelocator.geocode(address)
+            self.latitude = location.latitude
+            self.longitude = location.longitude
+            return True
+        except Exception:
+            print(address)
+            print("Calculate_coordinates failed: {}".format(sys.exc_info()[0]))
+            return False
