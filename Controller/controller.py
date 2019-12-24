@@ -38,7 +38,8 @@ class Controller:
                     dict_offer['stillAvailable'] = True
                     dict_offer['lastTimeView'] = time.strftime('%Y-%m-%d %H:%M:%S')
                     offer = Offer(dict_offer)
-                    self.my_db.insert_offer(offer)
+                    if offer.latitude != 'None' and offer.longitude != 'None':
+                        self.my_db.insert_offer(offer)
                 dict_offers.clear()
 
             else:
@@ -64,7 +65,8 @@ class Controller:
                         dict_offer['stillAvailable'] = True
                         dict_offer['lastTimeView'] = time.strftime('%Y-%m-%d %H:%M:%S')
                         offer = Offer(dict_offer)
-                        self.my_db.insert_offer(offer)
+                        if offer.latitude != 'None' and offer.longitude != 'None':
+                            self.my_db.insert_offer(offer)
                     dict_offers.clear()
 
         # Get offers from DB
