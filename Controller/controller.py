@@ -29,6 +29,7 @@ class Controller:
         if skip_parse is False:
             # Fill DB
             if fake is True:
+                print("Fill DB...")
                 # For test purpose only
                 # Store the HTML file as a string
                 page = open('toParse.html', 'r')
@@ -70,12 +71,14 @@ class Controller:
                     dict_offers.clear()
 
         # Get offers from DB
+        print("Get offers from DB...")
         list_dict_offers = self.my_db.get_all_offers()
 
         for dict_offer in list_dict_offers:
             offer = Offer(dict_offer)
             self.offers.append(offer)
 
+        print("Create grid...")
         grid_step_width = 0.04  # Step for latitudes
         grid_step_height = 0.02  # Step for longitudes
         min_latitude = self.my_db.get_min_latitude()
@@ -92,8 +95,12 @@ class Controller:
                 area = Area(latitude, longitude, grid_step_height, grid_step_width)
                 lines.append(area)
 
+        count = 0
         # Populate the grid
         for an_offer in self.offers:
+            count += 1
+            if count % 20 == 0:
+                print("Populate grid: {} out of {}".format(count, len(self.offers)), end='\r')
             if an_offer.latitude != 'None':
                 for line in areas_grid:
                     for area in line:
@@ -102,7 +109,7 @@ class Controller:
                            (an_offer.longitude > area.posY) and\
                            (an_offer.longitude < (area.posY + area.height)):
                             area.add_offer(an_offer)
-
+        print("Calculate average prices in the grid...")
         # Calculation of the average price in the grid
         for line in areas_grid:
             for area in line:
@@ -118,13 +125,16 @@ class Controller:
         most_expensive = 0
         cheapest = 100000
         # Look for more expensive and cheapest area values
+        print("Get extrem price values...")
         for line in areas_grid:
             for area in line:
                 if area.average_price > most_expensive:
                     most_expensive = area.average_price
                 if area.average_price != 0 and area.average_price < cheapest:
                     cheapest = area.average_price
+
         # Draw the grid
+        print("Populate the grid...")
         for line in areas_grid:
             for area in line:
                 if area.average_price != 0:
