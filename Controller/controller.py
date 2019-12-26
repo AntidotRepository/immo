@@ -148,6 +148,7 @@ class Controller:
             title += "Price: {}€\\n".format(str(an_offer.price))
             title += "Size: {}\\n".format(str(an_offer.livingSpace))
             title += "Sq meter price: {:.2f}€/m2\\n".format(an_offer.sq_meter_price)
+            title += "dev from average: {:.2f}€/m2\\n".format(an_offer.sq_meter_price - an_offer.area_average_price)
             title += "ID: {}\\n".format(str(an_offer.id))
             gmap.marker(an_offer.latitude, an_offer.longitude, color, title=title)
 
