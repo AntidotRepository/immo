@@ -95,20 +95,14 @@ class Controller:
                 area = Area(latitude, longitude, grid_step_height, grid_step_width)
                 lines.append(area)
 
-        count = 0
         # Populate the grid
+        print("Populate grid...")
         for an_offer in self.offers:
-            count += 1
-            if count % 20 == 0:
-                print("Populate grid: {} out of {}".format(count, len(self.offers)), end='\r')
             if an_offer.latitude != 'None':
-                for line in areas_grid:
-                    for area in line:
-                        if (an_offer.latitude > area.posX) and\
-                           (an_offer.latitude < (area.posX + area.width)) and\
-                           (an_offer.longitude > area.posY) and\
-                           (an_offer.longitude < (area.posY + area.height)):
-                            area.add_offer(an_offer)
+                lat_case = int((an_offer.latitude - min_latitude) / grid_step_height)
+                long_case = int((an_offer.longitude - min_longitude) / grid_step_width)
+                areas_grid[lat_case][long_case].add_offer(an_offer)
+
         print("Calculate average prices in the grid...")
         # Calculation of the average price in the grid
         for line in areas_grid:
@@ -152,9 +146,9 @@ class Controller:
                 color = 'red'
             title = an_offer.title.replace('"', '\'').replace('\n', ' ').replace('\r', ' ') +' \\n'
             title += "Price: {}€\\n".format(str(an_offer.price))
-            sq_meter_price = "sq meter price: {:.2f}€/m2\\n".format(an_offer.sq_meter_price)
-            title += sq_meter_price
-            title += "ID: {}".format(str(an_offer.id))
+            title += "Size: {}\\n".format(str(an_offer.livingSpace))
+            title += "Sq meter price: {:.2f}€/m2\\n".format(an_offer.sq_meter_price)
+            title += "ID: {}\\n".format(str(an_offer.id))
             gmap.marker(an_offer.latitude, an_offer.longitude, color, title=title)
 
         gmap.draw(os.getcwd() + "/maps.html")
