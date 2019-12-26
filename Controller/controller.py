@@ -123,7 +123,7 @@ class Controller:
         gmap = gmplot.GoogleMapPlotter(location.latitude, location.longitude, 11)
 
         most_expensive = 0
-        cheapest = 100000
+        cheapest = 999999
         # Look for more expensive and cheapest area values
         print("Get extrem price values...")
         for line in areas_grid:
@@ -150,6 +150,11 @@ class Controller:
                 color = 'blue'
             else:
                 color = 'red'
-            gmap.scatter([an_offer.latitude], [an_offer.longitude], color, size=40, marker=False)
+            title = an_offer.title.replace('"', '\'').replace('\n', ' ').replace('\r', ' ') +' \\n'
+            title += "Price: {}€\\n".format(str(an_offer.price))
+            sq_meter_price = "sq meter price: {:.2f}€/m2\\n".format(an_offer.sq_meter_price)
+            title += sq_meter_price
+            title += "ID: {}".format(str(an_offer.id))
+            gmap.marker(an_offer.latitude, an_offer.longitude, color, title=title)
 
         gmap.draw(os.getcwd() + "/maps.html")
