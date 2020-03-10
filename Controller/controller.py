@@ -140,16 +140,17 @@ class Controller:
 
         # Change the color of the dot according to the price.
         for an_offer in self.offers:
-            if an_offer.sq_meter_price < an_offer.area_average_price:
-                color = 'blue'
-            else:
-                color = 'red'
-            title = an_offer.title.replace('"', '\'').replace('\n', ' ').replace('\r', ' ') +' \\n'
-            title += "Price: {}€\\n".format(str(an_offer.price))
-            title += "Size: {}\\n".format(str(an_offer.livingSpace))
-            title += "Sq meter price: {:.2f}€/m2\\n".format(an_offer.sq_meter_price)
-            title += "dev from average: {:.2f}€/m2\\n".format(an_offer.sq_meter_price - an_offer.area_average_price)
-            title += "ID: {}\\n".format(str(an_offer.id))
-            gmap.marker(an_offer.latitude, an_offer.longitude, color, title=title)
+            if an_offer.price < 170000 and an_offer.livingSpace > 10:
+	            if an_offer.sq_meter_price < an_offer.area_average_price:
+	                color = 'blue'
+	            else:
+	                color = 'red'
+	            title = an_offer.title.replace('"', '\'').replace('\n', ' ').replace('\r', ' ') +' \\n'
+	            title += "Price: {}€\\n".format(str(an_offer.price))
+	            title += "Size: {}\\n".format(str(an_offer.livingSpace))
+	            title += "Sq meter price: {:.2f}€/m2\\n".format(an_offer.sq_meter_price)
+	            title += "dev from average: {:.2f}€/m2\\n".format(an_offer.sq_meter_price - an_offer.area_average_price)
+	            title += "ID: {}\\n".format(str(an_offer.id))
+	            gmap.marker(an_offer.latitude, an_offer.longitude, color, title=title)
 
         gmap.draw(os.getcwd() + "/maps.html")

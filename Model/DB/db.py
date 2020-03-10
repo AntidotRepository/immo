@@ -144,7 +144,10 @@ class DB():
                                FROM offers
                                INNER JOIN addresses
                                ON offers.id = addresses.appartment_id
-                               where addresses.street != 'None';
+                               where addresses.street != 'None'
+                               and offers.title NOT LIKE "%vermietet%"
+                               and offers.title NOT LIKE "%kapital%"
+                               and offers.title NOT LIKE "%rendite%";
             ''')
         lines = self.cursor.fetchall()
 
