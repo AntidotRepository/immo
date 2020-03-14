@@ -50,7 +50,7 @@ class DB():
                                         :cellar,
                                         :isBarrierFree,
                                         :stillAvailable,
-                                        :lastTimeView);''',
+                                        date());''',
                              {
                                  'id': offer.id,
                                  'modification': offer.modification,
@@ -70,11 +70,10 @@ class DB():
                                  'guestToilet': offer.guestToilet,
                                  'cellar': offer.cellar,
                                  'isBarrierFree': offer.isBarrierFree,
-                                 'stillAvailable': offer.stillAvailable,
-                                 'lastTimeView': offer.lastTimeView
+                                 'stillAvailable': offer.stillAvailable
                              })
-        except Exception:
-            print("Insert offer exception: {}".format(sys.exc_info()[0]))
+        except sqlite3.IntegrityError:
+            self.set_offer_to_available(offer.id)
 
         try:
             self.cursor.execute('''INSERT INTO addresses(appartment_id,
@@ -107,16 +106,11 @@ class DB():
                                  'quarter': offer.quarter
                              })
             self.db.commit()
+        except sqlite3.IntegrityError:
+            # Already in the database
+            pass
         except Exception:
-            print("street: {}".format(offer.street))
-            print("houseNumber: {}".format(offer.houseNumber))
-            print("longitude: {}".format(offer.longitude))
-            print("latitude: {}".format(offer.latitude))
-            print("preciseHouseNumber: {}".format(offer.preciseHouseNumber))
-            print("postcode: {}".format(offer.postcode))
-            print("city: {}".format(offer.city))
-            print("quarter: {}".format(offer.quarter))
-            print("Insert address: {}".format(sys.exc_info()[0]))
+            print("Unhandled exception: {}".format(sys.exc_info()[0]))
 
     def close(self):
         self.db.close()
@@ -205,3 +199,13 @@ class DB():
         self.cursor.execute('''SELECT MAX(longitude) FROM addresses;''')
         line = self.cursor.fetchone()
         return line[0]
+
+    def set_all_offers_to_unavailable(self):
+        self.cursor.execute('''UPDATE Offers SET stillAvailable=False;''')
+        self.db.commit()
+
+    def set_offer_to_available(self, appartment_id):
+        self.cursor.execute('''UPDATE Offers
+                               SET stillAvailable=True, lastTimeView=date()
+                               WHERE id=:id;''', {'id': appartment_id})
+        self.db.commit()

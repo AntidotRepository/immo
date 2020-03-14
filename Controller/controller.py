@@ -28,6 +28,8 @@ class Controller:
             ssl._create_default_https_context = \
                 ssl._create_unverified_context
 
+        self.my_db.set_all_offers_to_unavailable()
+
         if skip_parse is False:
             # Fill DB
             if fake is True:
@@ -39,7 +41,6 @@ class Controller:
 
                 for dict_offer in dict_offers:
                     dict_offer['stillAvailable'] = True
-                    dict_offer['lastTimeView'] = time.strftime('%Y-%m-%d %H:%M:%S')
                     offer = Offer(dict_offer)
                     if offer.latitude != 'None' and offer.longitude != 'None':
                         self.my_db.insert_offer(offer)
