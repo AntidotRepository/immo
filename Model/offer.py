@@ -45,10 +45,12 @@ class Offer():
 
     def calculate_sq_meter_price(self):
         # Calculate price per square meter.
-        assert self.price != 0, "Appartment id: {}".format(self.id)
-        assert self.livingSpace != 0, "Appartment id: {}".format(self.id)
-
-        return self.price / self.livingSpace
+        # assert self.price != 0, "Appartment id: {}".format(self.id)
+        # assert self.livingSpace != 0, "Appartment id: {}".format(self.id)
+        if self.price != 0 and self.livingSpace != 0:
+            return self.price / self.livingSpace
+        else:
+            return -1
 
     def calculate_coordinates(self):
         # Manage SSL certificate issue (not pretty clean)
