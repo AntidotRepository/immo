@@ -1,3 +1,5 @@
+# coding: utf-8
+
 from Model.DB.db import *
 from Model.offer import *
 from Model.area import *
