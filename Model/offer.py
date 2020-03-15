@@ -36,10 +36,6 @@ class Offer():
         if offer['latitude'] != 'None' and offer['longitude'] != 'None':
             self.latitude = offer['latitude']
             self.longitude = offer['longitude']
-        else:
-            if self.calculate_coordinates() is False:
-                self.latitude = 'None'
-                self.longitude = 'None'
 
         self.area_average_price = 0
 

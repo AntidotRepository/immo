@@ -141,7 +141,8 @@ class DB():
                                where addresses.street != 'None'
                                and offers.title NOT LIKE "%vermietet%"
                                and offers.title NOT LIKE "%kapital%"
-                               and offers.title NOT LIKE "%rendite%";
+                               and offers.title NOT LIKE "%rendite%"
+                               and offers.stillAvailable = True;
             ''')
         lines = self.cursor.fetchall()
 
@@ -209,3 +210,11 @@ class DB():
                                SET stillAvailable=True, lastTimeView=date()
                                WHERE id=:id;''', {'id': appartment_id})
         self.db.commit()
+
+    def offer_id_exists(self, appartment_id):
+        self.cursor.execute('''SELECT id
+                               FROM Offers
+                               Where id=:id;''',
+                            {'id': appartment_id})
+        line = self.cursor.fetchone()
+        return line is not None

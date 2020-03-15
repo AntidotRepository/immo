@@ -28,8 +28,6 @@ class Controller:
             ssl._create_default_https_context = \
                 ssl._create_unverified_context
 
-        self.my_db.set_all_offers_to_unavailable()
-
         if skip_parse is False:
             # Fill DB
             if fake is True:
@@ -47,6 +45,7 @@ class Controller:
                 dict_offers.clear()
 
             else:
+                self.my_db.set_all_offers_to_unavailable()
                 # Normal use!
                 # First, check how many page we have to retrieve.
                 page = urllib.request.urlopen('https://www.immobilienscout24.de/' +
@@ -69,8 +68,16 @@ class Controller:
                         dict_offer['stillAvailable'] = True
                         dict_offer['lastTimeView'] = time.strftime('%Y-%m-%d %H:%M:%S')
                         offer = Offer(dict_offer)
-                        if offer.latitude != 'None' and offer.longitude != 'None':
-                            self.my_db.insert_offer(offer)
+                        if not self.my_db.offer_id_exists(offer.id):
+                            print("Doesn't exist!: {}".format(offer.id))
+                            if offer.calculate_coordinates() is False:
+                                offer.longitude = None
+                                offer.latitude = None
+                            if offer.latitude != 'None' and offer.longitude != 'None':
+                                self.my_db.insert_offer(offer)
+                        else:
+                            print("exists!: {}".format(offer.id))
+                            self.my_db.set_offer_to_available(offer.id)
                     dict_offers.clear()
 
         # Get offers from DB
@@ -102,6 +109,7 @@ class Controller:
         print("Populate grid...")
         for an_offer in self.offers:
             if an_offer.latitude != 'None':
+                print("{}, {}, {}".format(an_offer.id, an_offer.latitude, min_latitude))
                 lat_case = int((an_offer.latitude - min_latitude) / grid_step_height)
                 long_case = int((an_offer.longitude - min_longitude) / grid_step_width)
                 areas_grid[lat_case][long_case].add_offer(an_offer)
