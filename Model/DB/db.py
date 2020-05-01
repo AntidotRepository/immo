@@ -10,7 +10,7 @@ class DB():
 
     def insert_offer(self, offer):
         try:
-        # print("Insert {}".format(offer.title))
+            print("latitude: {}".format(offer.latitude))
             self.cursor.execute('''INSERT INTO offers (id,
                                                     modification,
                                                     creation,
@@ -138,11 +138,10 @@ class DB():
                                FROM offers
                                INNER JOIN addresses
                                ON offers.id = addresses.appartment_id
-                               where addresses.street != 'None'
-                               and offers.title NOT LIKE "%vermietet%"
+                               where offers.title NOT LIKE "%vermietet%"
                                and offers.title NOT LIKE "%kapital%"
                                and offers.title NOT LIKE "%rendite%"
-                               and offers.stillAvailable = True;
+                               and offers.stillAvailable = 1;
             ''')
         lines = self.cursor.fetchall()
 
@@ -202,12 +201,12 @@ class DB():
         return line[0]
 
     def set_all_offers_to_unavailable(self):
-        self.cursor.execute('''UPDATE Offers SET stillAvailable=False;''')
+        self.cursor.execute('''UPDATE Offers SET stillAvailable=0;''')
         self.db.commit()
 
     def set_offer_to_available(self, appartment_id):
         self.cursor.execute('''UPDATE Offers
-                               SET stillAvailable=True, lastTimeView=date()
+                               SET stillAvailable=1, lastTimeView=date()
                                WHERE id=:id;''', {'id': appartment_id})
         self.db.commit()
 

@@ -53,7 +53,9 @@ class Controller:
                                               'kaufen?pagenumber=1')
                 print("Get number of pages")
                 self.number_of_pages = self.my_parser.get_number_of_pages(page)
-
+                
+                count_failed = 0
+                count_succeed = 0
                 # For each page, get the offers
                 for i in range(1, self.number_of_pages):
                     print("page {}/{}".format(i, self.number_of_pages))
@@ -73,12 +75,17 @@ class Controller:
                             if offer.calculate_coordinates() is False:
                                 offer.longitude = None
                                 offer.latitude = None
+                                count_failed += 1
                             if offer.latitude != 'None' and offer.longitude != 'None':
                                 self.my_db.insert_offer(offer)
+                                count_succeed += 1
                         else:
                             print("exists!: {}".format(offer.id))
                             self.my_db.set_offer_to_available(offer.id)
+
                     dict_offers.clear()
+
+                print("Failed: {}, succeeded: {}".format(count_failed, count_succeed))
 
         # Get offers from DB
         print("Get offers from DB...")
@@ -108,8 +115,7 @@ class Controller:
         # Populate the grid
         print("Populate grid...")
         for an_offer in self.offers:
-            if an_offer.latitude != 'None':
-                print("{}, {}, {}".format(an_offer.id, an_offer.latitude, min_latitude))
+            if an_offer.latitude is not None and an_offer.longitude is not None:
                 lat_case = int((an_offer.latitude - min_latitude) / grid_step_height)
                 long_case = int((an_offer.longitude - min_longitude) / grid_step_width)
                 areas_grid[lat_case][long_case].add_offer(an_offer)
@@ -151,17 +157,19 @@ class Controller:
 
         # Change the color of the dot according to the price.
         for an_offer in self.offers:
-            if an_offer.price < 170000 and an_offer.livingSpace > 10:
-	            if an_offer.sq_meter_price < an_offer.area_average_price:
-	                color = 'blue'
-	            else:
-	                color = 'red'
-	            title = an_offer.title.replace('"', '\'').replace('\n', ' ').replace('\r', ' ') +' \\n'
-	            title += "Price: {}€\\n".format(str(an_offer.price))
-	            title += "Size: {}\\n".format(str(an_offer.livingSpace))
-	            title += "Sq meter price: {:.2f}€/m2\\n".format(an_offer.sq_meter_price)
-	            title += "dev from average: {:.2f}€/m2\\n".format(an_offer.sq_meter_price - an_offer.area_average_price)
-	            title += "ID: {}\\n".format(str(an_offer.id))
-	            gmap.marker(an_offer.latitude, an_offer.longitude, color, title=title)
+            if an_offer.latitude is not None and an_offer.longitude is not None:
+                if an_offer.livingSpace > 10 and an_offer.price < 180000:
+                    if an_offer.sq_meter_price < an_offer.area_average_price:
+                        color = 'blue'
+                    else:
+                        color = 'red'
+                    print("LAT: {}, LONG: {}".format(an_offer.latitude, an_offer.longitude))
+                    title = an_offer.title.replace('"', '\'').replace('\n', ' ').replace('\r', ' ') +' \\n'
+                    title += "Price: {}€\\n".format(str(an_offer.price))
+                    title += "Size: {}\\n".format(str(an_offer.livingSpace))
+                    title += "Sq meter price: {:.2f}€/m2\\n".format(an_offer.sq_meter_price)
+                    title += "dev from average: {:.2f}€/m2\\n".format(an_offer.sq_meter_price - an_offer.area_average_price)
+                    title += "ID: {}\\n".format(str(an_offer.id))
+                    gmap.marker(an_offer.latitude, an_offer.longitude, color, title=title)
 
         gmap.draw(os.getcwd() + "/maps.html")

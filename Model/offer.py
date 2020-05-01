@@ -36,6 +36,8 @@ class Offer():
         if offer['latitude'] != 'None' and offer['longitude'] != 'None':
             self.latitude = offer['latitude']
             self.longitude = offer['longitude']
+        self.filtered = offer['filtered']
+        self.comments = offer['comments']
 
         self.area_average_price = 0
 
@@ -66,11 +68,16 @@ class Offer():
         if self.city != 'None':
             address = address + " " + self.city
         try:
+            print("Get geocode")
             location = gelocator.geocode(address)
-            self.latitude = location.latitude
-            self.longitude = location.longitude
-            return True
+            if(type(location) != 'NoneType'):
+                self.latitude = location.latitude
+                self.longitude = location.longitude
+                return True
+            else:
+                print("failed to get location for {}".format(self.id))
+                return False
         except Exception:
             print(address)
-            print("Calculate_coordinates failed: {}".format(sys.exc_info()[0]))
+            print("Calculate_coordinates failed: {}".format(sys.exc_info()))
             return False
