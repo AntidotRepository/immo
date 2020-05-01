@@ -30,7 +30,9 @@ class DB():
                                                     cellar,
                                                     isBarrierFree,
                                                     stillAvailable,
-                                                    lastTimeView)
+                                                    lastTimeView,
+                                                    filtered,
+                                                    comments)
                                 VALUES (:id,
                                         :modification,
                                         :creation,
@@ -50,7 +52,9 @@ class DB():
                                         :cellar,
                                         :isBarrierFree,
                                         :stillAvailable,
-                                        date());''',
+                                        date(),
+                                        :filtered,
+                                        :comments);''',
                              {
                                  'id': offer.id,
                                  'modification': offer.modification,
@@ -70,7 +74,9 @@ class DB():
                                  'guestToilet': offer.guestToilet,
                                  'cellar': offer.cellar,
                                  'isBarrierFree': offer.isBarrierFree,
-                                 'stillAvailable': offer.stillAvailable
+                                 'stillAvailable': offer.stillAvailable,
+                                 'filtered': offer.filtered,
+                                 'comments': offer.comments
                              })
         except sqlite3.IntegrityError:
             self.set_offer_to_available(offer.id)
@@ -129,7 +135,8 @@ class DB():
                                       offers.lift, offers.guestToilet,
                                       offers.cellar, offers.isBarrierFree,
                                       offers.stillAvailable,
-                                      offers.lastTimeView, addresses.street,
+                                      offers.lastTimeView, offers.filtered,
+                                      offers.comments, addresses.street,
                                       addresses.houseNumber,
                                       addresses.latitude, addresses.longitude,
                                       addresses.preciseHouseNumber,
@@ -168,14 +175,16 @@ class DB():
             dict_offer['isBarrierFree'] = line[17]
             dict_offer['stillAvailable'] = line[18]
             dict_offer['lastTimeView'] = line[19]
-            dict_offer['street'] = line[20]
-            dict_offer['houseNumber'] = line[21]
-            dict_offer['latitude'] = line[22]
-            dict_offer['longitude'] = line[23]
-            dict_offer['preciseHouseNumber'] = line[24]
-            dict_offer['postcode'] = line[25]
-            dict_offer['city'] = line[26]
-            dict_offer['quarter'] = line[27]
+            dict_offer['filtered'] = line[20]
+            dict_offer['comments'] = line[21]
+            dict_offer['street'] = line[22]
+            dict_offer['houseNumber'] = line[23]
+            dict_offer['latitude'] = line[24]
+            dict_offer['longitude'] = line[25]
+            dict_offer['preciseHouseNumber'] = line[26]
+            dict_offer['postcode'] = line[27]
+            dict_offer['city'] = line[28]
+            dict_offer['quarter'] = line[29]
             list_offers.append(dict_offer)
 
         return list_offers
