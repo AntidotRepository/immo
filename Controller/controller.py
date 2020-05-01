@@ -69,6 +69,8 @@ class Controller:
                     for dict_offer in dict_offers:
                         dict_offer['stillAvailable'] = True
                         dict_offer['lastTimeView'] = time.strftime('%Y-%m-%d %H:%M:%S')
+                        dict_offer['filtered'] = False
+                        dict_offer['comments'] = ""
                         offer = Offer(dict_offer)
                         if not self.my_db.offer_id_exists(offer.id):
                             print("Doesn't exist!: {}".format(offer.id))
@@ -158,7 +160,7 @@ class Controller:
         # Change the color of the dot according to the price.
         for an_offer in self.offers:
             if an_offer.latitude is not None and an_offer.longitude is not None:
-                if an_offer.livingSpace > 10 and an_offer.price < 180000:
+                if an_offer.livingSpace > 10 and an_offer.price < 180000 and an_offer.filtered == 1:
                     if an_offer.sq_meter_price < an_offer.area_average_price:
                         color = 'blue'
                     else:
@@ -169,6 +171,7 @@ class Controller:
                     title += "Size: {}\\n".format(str(an_offer.livingSpace))
                     title += "Sq meter price: {:.2f}€/m2\\n".format(an_offer.sq_meter_price)
                     title += "dev from average: {:.2f}€/m2\\n".format(an_offer.sq_meter_price - an_offer.area_average_price)
+                    title += "Comments: {}\\n".format(an_offer.comments)
                     title += "ID: {}\\n".format(str(an_offer.id))
                     gmap.marker(an_offer.latitude, an_offer.longitude, color, title=title)
 

@@ -219,6 +219,19 @@ class DB():
                                WHERE id=:id;''', {'id': appartment_id})
         self.db.commit()
 
+    def filter_offer(self, appartment_id):
+        self.cursor.execute('''UPDATE Offers
+                               SET filtered=1
+                               WHERE id=:id;''', {'id': appartment_id})
+        self.db.commit()
+
+    def comment_offer(self, appartment_id, comments):
+        self.cursor.execute('''UPDATE Offers
+                               SET comments=:comments
+                               WHERE id=:id;''', {'comments': comments,
+                                                  'id': appartment_id})
+        self.db.commit()
+
     def offer_id_exists(self, appartment_id):
         self.cursor.execute('''SELECT id
                                FROM Offers

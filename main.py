@@ -22,9 +22,17 @@ if __name__ == "__main__":
     if not args.filter and not args.comment:
         if args.parse:
             print("start app with parsing")
+            skip = False
         else:
             print("Skip parsing")
-        #my_controller = Controller(fake=False, skip_parse=True)
+            skip = True
+        my_controller = Controller(fake=False, skip_parse=skip)
     else:
-        if args.comments and not args.filter:
+        if args.comment and not args.filter:
             print("-f option needed")
+        else:
+            my_db = DB()
+            my_db.filter_offer(args.filter)
+            if args.comment:
+                my_db.comment_offer(args.filter, args.comment)
+            my_db.close()
