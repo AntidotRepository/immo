@@ -10,6 +10,7 @@ if __name__ == "__main__":
 
     parser.add_argument('-f', '--filter', help="Filter offer")
     parser.add_argument('-c', '--comment', help="Comments")
+    parser.add_argument('-p', '--parse', help="Start parse", action="store_true")
 
     args = parser.parse_args()
 
@@ -18,5 +19,12 @@ if __name__ == "__main__":
     if args.comment:
         print("comments: {}".format(args.comment))
 
-
-    #my_controller = Controller(fake=False, skip_parse=True)
+    if not args.filter and not args.comment:
+        if args.parse:
+            print("start app with parsing")
+        else:
+            print("Skip parsing")
+        #my_controller = Controller(fake=False, skip_parse=True)
+    else:
+        if args.comments and not args.filter:
+            print("-f option needed")
